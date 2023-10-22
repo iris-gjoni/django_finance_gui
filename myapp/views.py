@@ -18,3 +18,7 @@ class PageTwo(View):
 
 def PageThree(request):
     return render(request, 'myapp/Navigations.html')
+
+
+def GraphPage(request):
+    return render(request, 'myapp/graphing.html')
