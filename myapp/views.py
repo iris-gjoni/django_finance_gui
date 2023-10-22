@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
+import csv
 
 
 class HelloWorld(View):
@@ -22,3 +23,25 @@ def PageThree(request):
 
 def GraphPage(request):
     return render(request, 'myapp/graphing.html')
+
+
+def my_view(request):
+    dates, closes = read_csv_data('C:/quant/historicalStockPrices/historical_AAPL.csv')
+    return render(request, 'myapp/graphing.html', {
+        'dates': dates,
+        'closes': closes
+    })
+
+
+def read_csv_data(filename):
+    dates = []
+    closes = []
+
+    with open(filename, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            dates.append(row['Date'])
+            closes.append(float(row['Close']))
+
+    return dates, closes
+

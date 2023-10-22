@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from myapp.views import HelloWorld, PageTwo, PageThree, GraphPage
+from myapp.views import HelloWorld, PageTwo, PageThree, GraphPage, my_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +24,5 @@ urlpatterns = [
     path('two', PageTwo.as_view(), name='PageTwo_cbv'),
     path('PageThree/', PageThree, name='PageThree'),
     path('graph/', GraphPage, name='GraphPage'),
+    path('view/', my_view, name='my_view'),
 ]
