@@ -10,53 +10,66 @@
     <title>Chart Page</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 </head>
 
 <body>
 <div class="container">
     <h2>Select Data for the Chart</h2>
-
-    <!-- Dropdown selection box -->
-    <label for="dataSelect">Choose a dataset:</label>
-    <select id="dataSelect">
-        <option value="dataset1">Dataset 1</option>
-        <option value="dataset2">Dataset 2</option>
-        <option value="dataset3">Dataset 3</option>
-    </select>
-
-    <!-- Button -->
+    <form action="{% url 'my_view' %}" method="post">
+        {% csrf_token %}
+        <!--        <label for="dataSelect">Choose a dataset:</label>-->
+        <select id="dataSelect" name="dataSelect">
+            <option value="AAPL">apple</option>
+            <option value="AMZN">amazon</option>
+        </select>
+        <!--        <label for="timeSelect">Choose a timeRange:</label>-->
+        <select id="timeSelect" name="timeSelect">
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+            <option value="365">Last 365 days</option>
+            <option value="0">max</option>
+        </select>
+        <button type="submit">Load Data</button>
+    </form>
+</div>
+<div class="container">
     <button id="loadChartBtn">Load Chart</button>
-
-    <!-- Placeholder for the chart -->
+    <button id="overlayBtn">Add to Chart</button>
+    <button id="removeBtn">Remove from Chart</button>
+    <button id="darkModeToggle">Toggle Dark Mode</button>
     <canvas id="myChart" width="400" height="400"></canvas>
 </div>
 
-<!-- Optional: Link to JS file to handle button click and render chart -->
 <script>
-    const dates = {{ dates|safe }};
-    const closes = {{ closes|safe }};
-    const btn = document.getElementById('loadChartBtn');
+const data = JSON.parse('{{ data|safe }}');
 
-    btn.addEventListener('click', function() {
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const selectedData = document.getElementById('dataSelect').value;
+function addToGraph(){
+    alert('Function called');
+}
 
-        new Chart(ctx, {
-            type: 'line',  // Line chart for date vs. close price
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: 'Close Prices',
-                    data: closes,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            }
-        });
-    });
+document.getElementById("darkModeToggle").addEventListener("click", function() {
+    const body = document.body;
+    const currentlyDark = body.classList.contains("dark-mode");
 
+    if (currentlyDark) {
+        body.classList.remove("dark-mode");
+        localStorage.setItem("dark-mode", "false");
+    } else {
+        body.classList.add("dark-mode");
+        localStorage.setItem("dark-mode", "true");
+    }
+});
+
+// On page load, check the user's preference
+window.addEventListener("load", function() {
+    if (localStorage.getItem("dark-mode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+});
 </script>
+<script src="{% static 'charting_data.js'%}"></script>
 </body>
 
 </html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Async Chart Page</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+</head>
+
+<body>
+<div class="container">
+    <h2>Select Data for the Chart</h2>
+    <!--        <label for="dataSelect">Choose a dataset:</label>-->
+    <select id="dataSelect" name="dataSelect">
+        <option value="AAPL">apple</option>
+        <option value="AMZN">amazon</option>
+    </select>
+    <!--        <label for="timeSelect">Choose a timeRange:</label>-->
+    <select id="timeSelect" name="timeSelect">
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="365">Last 365 days</option>
+        <option value="0">max</option>
+    </select>
+    <button id="sendConsumerBtn" name="submitBtn" type="button" value="Send">Load Data</button>
+</div>
+<div class="container">
+    <button id="loadChartBtn">Load Chart</button>
+    <button id="overlayBtn">Add to Chart</button>
+    <button id="removeBtn">Remove from Chart</button>
+    <button id="darkModeToggle">Toggle Dark Mode</button>
+    <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+
+<script src="{% static 'async_page.js'%}"></script>
+
+</body>
+</html>

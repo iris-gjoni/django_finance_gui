@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from myapp.views import HelloWorld, PageTwo, PageThree, GraphPage, my_view
+from myapp.views import HelloWorld, Async_page, PageTwo, PageThree, GraphPage, my_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +27,12 @@ urlpatterns = [
     path('PageThree/', PageThree, name='PageThree'),
     path('graph/', GraphPage, name='GraphPage'),
     path('view/', my_view, name='my_view'),
+    path('async_page/', Async_page, name='Async_page'),
 ]
+
+# MEDIA_URL = '/media/'
+#
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

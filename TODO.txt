@@ -1,0 +1,34 @@
+====
+TODO
+====
+
+127.0.0.1:8000/view
+
+-1) look into adding a conenciton/request to a java process
+
+-1) look into including qpython to do a kdb query
+
+0) look into django-storages
+    - could help simplify data manipulation and easier to go to cloud
+
+1) add logon page and experiment with logins and authentication
+
+DONE 2) add data selection in the dropdown box
+
+DONE 3) add ability to graph any timeseries data
+
+4) add navigation bar perhaps
+
+5) add ability to update files on request (copy from finance GUI)
+
+6) think about how to use elastic beanstalk
+    - S3 for storage and django-storages lib
+
+7) experiment with looks and interactivity
+    - more css and appearance upgrades
+
+8) experiment with lightning addresses
+    - program able to recognise that a lightning payment was made
+    - program able to respond to this and create an output
+
+
