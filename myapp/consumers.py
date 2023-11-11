@@ -1,8 +1,9 @@
 import csv
 import os
-
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+from myapp.util_dir.message_types import message_type_string, add_to_graph, load_graph, get_new_csv_data, file_path
+import myapp.util_dir.YahooFinUtil as fin_util
 
 
 class DashConsumer(AsyncWebsocketConsumer):
@@ -16,12 +17,23 @@ class DashConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
+        message_type = text_data_json[message_type_string]
+        if message_type == load_graph:
+            await self.do_load_graph(text_data_json)
+
+        if message_type == add_to_graph:
+            print("add to graph not implemented here")
+
+        if message_type == get_new_csv_data:
+            ticker = text_data_json["ticker"]
+            final_file_path = file_path + "historical_" + ticker + ".csv"
+            fin_util.append_new_data(ticker, final_file_path)
+
+    async def do_load_graph(self, text_data_json):
         ticker = text_data_json["ticker"]
         time = text_data_json["time"]
-
         print(ticker)
         print(time)
-
         datasets = read_all_csv_data(time, ticker)
         serialized_data = [
             {
@@ -31,7 +43,6 @@ class DashConsumer(AsyncWebsocketConsumer):
             }
             for entry in datasets
         ]
-
         await self.send(text_data=json.dumps({
             'ticker': ticker,
             'time': time,
@@ -53,14 +64,14 @@ def read_all_csv_data(days, ticker):
         file_path = directory_path + file_name
         dates = []
         closes = []
-        if name == ticker:
-            with open(file_path, 'r') as file:
-                reader = csv.DictReader(file)
-                for row in reader:
-                    dates.append(row['Date'])
-                    closes.append(float(row['Close']))
-                print("name:" + name)
-                datasets.append(DataEntry(name, dates, closes))
+        # if name == ticker:
+        with open(file_path, 'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                dates.append(row['Date'])
+                closes.append(float(row['Close']))
+            print("name:" + name)
+            datasets.append(DataEntry(name, dates, closes))
 
     return datasets
 
