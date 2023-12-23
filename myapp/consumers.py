@@ -1,5 +1,6 @@
 import csv
 import os
+import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from myapp.util_dir.message_types import message_type_string, add_to_graph, load_graph, get_new_csv_data, file_path
@@ -11,9 +12,11 @@ class DashConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         print('connection')
         await self.accept()
+        self.loop_task = asyncio.create_task(self.check_for_updates("c:/quant/shared_data/share.csv"))
 
     async def disconnect(self, code):
         print(f'connection closed: {code}')
+        self.loop_task.cancel()
 
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
@@ -49,9 +52,28 @@ class DashConsumer(AsyncWebsocketConsumer):
             'serialized_data': serialized_data
         }))
 
+    async def check_for_updates(self, file_path):
+        while True:
+            updates = await self.get_updates(file_path)
+
+            if updates:
+                # Send updates to the WebSocket client
+                # await self.send(json.dumps(updates))
+                print("updates received")
+
+            await asyncio.sleep(5)  # Waits for 5 seconds before next check
+
+    async def get_updates(self, file_path):
+        with open(file_path, 'r', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+
+            for row in reader:
+                print(row)
+            return row
+
 
 def read_all_csv_data(days, ticker):
-    #todo implement days and ticker filtering
+    # todo implement days and ticker filtering
     datasets = []
 
     directory_path = 'myapp/sampledata/'
